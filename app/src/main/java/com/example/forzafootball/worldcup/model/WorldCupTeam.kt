@@ -1,4 +1,4 @@
-package com.example.forzafootball.data.remote.model
+package com.example.forzafootball.worldcup.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

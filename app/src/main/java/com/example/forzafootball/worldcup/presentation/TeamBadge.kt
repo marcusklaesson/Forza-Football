@@ -1,4 +1,4 @@
-package com.example.forzafootball.ui.worldcup
+package com.example.forzafootball.worldcup.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,12 +16,6 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 
-/**
- * Displays a team badge from [imageUrl].
- *
- * While loading, or if the image is missing/fails (e.g. the campaign bucket has no badge),
- * it gracefully falls back to a circular avatar with the team's initial.
- */
 @Composable
 fun TeamBadge(
     teamName: String,

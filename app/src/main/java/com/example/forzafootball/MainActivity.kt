@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.forzafootball.ui.theme.ForzaFootballTheme
-import com.example.forzafootball.ui.worldcup.WorldCupTeamsScreen
+import com.example.forzafootball.worldcup.presentation.WorldCupTeamsScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

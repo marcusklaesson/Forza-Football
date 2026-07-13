@@ -1,5 +1,6 @@
 package com.example.forzafootball.data.remote
 
+import com.example.forzafootball.worldcup.remote.WorldCupApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
