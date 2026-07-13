@@ -3,8 +3,9 @@ package com.example.forzafootball.ui.worldcup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.forzafootball.data.remote.BadgeUrls
 
 @Composable
 fun WorldCupTeamsScreen(
@@ -55,18 +57,26 @@ fun WorldCupTeamsScreen(
             }
 
             else -> {
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                LazyColumn (
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(8.dp),
+                ) {
                     items(uiState.teams) { team ->
-                        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-                            Text(
-                                text = "#${team.worldRank}  ${team.name}",
-                                style = MaterialTheme.typography.titleMedium,
+                        Row(
+                            modifier = Modifier.padding(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            TeamBadge(
+                                teamName = team.name,
+                                imageUrl = BadgeUrls.teamBadge(team.teamId),
                             )
-                            Text(
-                                text = "World Cup titles: ${team.worldCupTitles} · " +
-                                    "Participations: ${team.worldCupParticipations}",
-                                style = MaterialTheme.typography.bodySmall,
-                            )
+                            Column {
+                                Text(
+                                    text = team.name,
+                                    style = MaterialTheme.typography.titleMedium,
+                                )
+                            }
                         }
                         HorizontalDivider()
                     }
