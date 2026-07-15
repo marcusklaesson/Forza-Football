@@ -1,4 +1,4 @@
-package com.example.forzafootball.worldcup.presentation
+package com.example.forzafootball.ui.theme.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

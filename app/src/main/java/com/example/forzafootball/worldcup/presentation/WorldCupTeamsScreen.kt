@@ -1,5 +1,6 @@
 package com.example.forzafootball.worldcup.presentation
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,18 +14,26 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.forzafootball.ui.theme.components.TeamBadge
+import com.example.forzafootball.worldcup.model.WorldCupTeam
 import com.example.forzafootball.worldcup.remote.BadgeUrls
 
 @Composable
@@ -60,6 +69,7 @@ fun WorldCupTeamsScreen(
 @Composable
 fun TeamsList(uiState: WorldCupUiState, onSortDropdownCallback: (SortOption) -> Unit = {}) {
     val listState = rememberLazyListState()
+    var selectedTeam by remember { mutableStateOf<WorldCupTeam?>(null) }
 
     LaunchedEffect(uiState.sortOption) {
         listState.scrollToItem(0)
@@ -81,7 +91,10 @@ fun TeamsList(uiState: WorldCupUiState, onSortDropdownCallback: (SortOption) -> 
         ) {
             items(uiState.teams, key = { it.teamId }) { team ->
                 Row(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { selectedTeam = team }
+                        .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
@@ -105,6 +118,11 @@ fun TeamsList(uiState: WorldCupUiState, onSortDropdownCallback: (SortOption) -> 
             }
         }
     }
+
+    TeamDetailsBottomSheet(
+        team = selectedTeam,
+        onDismiss = { selectedTeam = null },
+    )
 }
 
 @Composable
