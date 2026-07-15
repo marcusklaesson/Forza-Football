@@ -1,6 +1,6 @@
 package com.example.forzafootball.worldcup.presentation
 
-import com.example.forzafootball.extension.formatCompact
+import com.example.forzafootball.core.extension.formatCompact
 import com.example.forzafootball.worldcup.model.WorldCupTeam
 
 enum class SortOption(

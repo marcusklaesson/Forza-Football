@@ -17,6 +17,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.forzafootball.ui.theme.ForzaFootballTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,6 +69,17 @@ fun SortDropdown(
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SortDropdownPreview() {
+    ForzaFootballTheme {
+        SortDropdown(
+            selected = SortOption.WORLD_RANK,
+            onOptionSelected = {},
+        )
     }
 }
 

@@ -12,10 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.forzafootball.extension.formatCompact
+import com.example.forzafootball.core.extension.formatCompact
+import com.example.forzafootball.ui.theme.ForzaFootballTheme
 import com.example.forzafootball.ui.theme.components.AppBottomSheet
 import com.example.forzafootball.ui.theme.components.TeamBadge
+import com.example.forzafootball.worldcup.misc.PreviewSampleData
 import com.example.forzafootball.worldcup.model.WorldCupTeam
 import com.example.forzafootball.worldcup.remote.BadgeUrls
 
@@ -29,35 +32,40 @@ fun TeamDetailsBottomSheet(
         onDismiss = onDismiss,
     ) {
         team ?: return@AppBottomSheet
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp)
-                .padding(bottom = 32.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+        TeamDetailsContent(team = team)
+    }
+}
+
+@Composable
+private fun TeamDetailsContent(team: WorldCupTeam) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .padding(bottom = 32.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                TeamBadge(
-                    teamName = team.name,
-                    imageUrl = BadgeUrls.teamBadge(team.teamId),
-                    size = 56.dp,
-                )
-                Text(
-                    team.name,
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-            HorizontalDivider()
-            DetailRow("World rank", "#${team.worldRank}")
-            DetailRow("World Cup titles", team.worldCupTitles.toString())
-            DetailRow("WC participations", team.worldCupParticipations.toString())
-            DetailRow("Population", formatCompact(team.population))
-            DetailRow("Registered players", formatCompact(team.registeredPlayers))
+            TeamBadge(
+                teamName = team.name,
+                imageUrl = BadgeUrls.teamBadge(team.teamId),
+                size = 56.dp,
+            )
+            Text(
+                team.name,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
         }
+        HorizontalDivider()
+        DetailRow("World rank", "#${team.worldRank}")
+        DetailRow("World Cup titles", team.worldCupTitles.toString())
+        DetailRow("Participations", team.worldCupParticipations.toString())
+        DetailRow("Population", formatCompact(team.population))
+        DetailRow("Registered players", formatCompact(team.registeredPlayers))
     }
 }
 
@@ -80,3 +88,12 @@ private fun DetailRow(label: String, value: String) {
         )
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun TeamDetailsContentPreview() {
+    ForzaFootballTheme {
+        TeamDetailsContent(team = PreviewSampleData.argentina)
+    }
+}
+

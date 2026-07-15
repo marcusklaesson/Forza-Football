@@ -15,6 +15,7 @@ data class WorldCupUiState(
     val teams: List<WorldCupTeam> = emptyList(),
     val sortOption: SortOption = SortOption.WORLD_RANK,
     val errorMessage: String? = null,
+    val comparisonTeams: List<WorldCupTeam> = emptyList(),
 )
 
 class WorldCupViewModel(
@@ -57,6 +58,28 @@ class WorldCupViewModel(
         _uiState.update {
             it.copy(sortOption = option, teams = option.sort(it.teams))
         }
+    }
+
+    fun onTeamLongPressed(team: WorldCupTeam) {
+        _uiState.update { state ->
+            val current = state.comparisonTeams
+            val updated = when {
+                current.any { it.teamId == team.teamId } ->
+                    // remove if already selected
+                    current.filterNot { it.teamId == team.teamId }
+
+                current.size >= 2 ->
+                    // replace the oldest with the new one
+                    listOf(current[1], team)
+
+                else -> current + team // add
+            }
+            state.copy(comparisonTeams = updated)
+        }
+    }
+
+    fun onComparisonDismissed() {
+        _uiState.update { it.copy(comparisonTeams = emptyList()) }
     }
 }
 

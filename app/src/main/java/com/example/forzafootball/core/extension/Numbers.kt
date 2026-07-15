@@ -1,4 +1,4 @@
-package com.example.forzafootball.extension
+package com.example.forzafootball.core.extension
 
 /** Formats large numbers compactly, e.g. 2_700_000 -> "2.7M". */
 fun formatCompact(value: Long): String = when {

@@ -1,4 +1,4 @@
-package com.example.forzafootball
+package com.example.forzafootball.core
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
