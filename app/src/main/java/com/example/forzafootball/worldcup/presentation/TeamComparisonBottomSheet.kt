@@ -1,16 +1,20 @@
 package com.example.forzafootball.worldcup.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,6 +26,8 @@ import com.example.forzafootball.ui.theme.components.TeamBadge
 import com.example.forzafootball.worldcup.misc.PreviewSampleData
 import com.example.forzafootball.worldcup.model.WorldCupTeam
 import com.example.forzafootball.worldcup.remote.BadgeUrls
+
+private enum class Better { HIGHER, LOWER }
 
 @Composable
 fun TeamComparisonBottomSheet(
@@ -53,30 +59,26 @@ private fun TeamComparisonContent(left: WorldCupTeam, right: WorldCupTeam) {
 
         HorizontalDivider()
 
-        ComparisonRow("World rank", "#${left.worldRank}", "#${right.worldRank}")
-        ComparisonRow("World Cup Titles", "${left.worldCupTitles}", "${right.worldCupTitles}")
-        ComparisonRow(
-            "Participations",
-            "${left.worldCupParticipations}",
-            "${right.worldCupParticipations}"
-        )
+        ComparisonRow("World rank", left.worldRank, right.worldRank, Better.LOWER) { "#$it" }
+        ComparisonRow("World Cup Titles", left.worldCupTitles, right.worldCupTitles)
+        ComparisonRow("Participations", left.worldCupParticipations, right.worldCupParticipations)
         ComparisonRow(
             "Population",
-            formatCompact(left.population),
-            formatCompact(right.population)
-        )
+            left.population,
+            right.population
+        ) { formatCompact(it.toLong()) }
         ComparisonRow(
             "Registered players",
-            formatCompact(left.registeredPlayers),
-            formatCompact(right.registeredPlayers)
-        )
+            left.registeredPlayers,
+            right.registeredPlayers
+        ) { formatCompact(it.toLong()) }
     }
 }
 
 @Composable
 private fun TeamHeader(team: WorldCupTeam, modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier.padding(8.dp),
+        modifier = modifier.padding(horizontal = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
@@ -95,7 +97,18 @@ private fun TeamHeader(team: WorldCupTeam, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun ComparisonRow(label: String, leftValue: String, rightValue: String) {
+private fun ComparisonRow(
+    label: String,
+    left: Number,
+    right: Number,
+    better: Better = Better.HIGHER,
+    format: (Number) -> String = { it.toString() }
+) {
+    val l = left.toDouble()
+    val r = right.toDouble()
+    val leftWins = if (better == Better.HIGHER) l > r else l < r
+    val rightWins = if (better == Better.HIGHER) r > l else r < l
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = label,
@@ -105,21 +118,44 @@ private fun ComparisonRow(label: String, leftValue: String, rightValue: String) 
             textAlign = TextAlign.Center,
         )
         Row(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                text = leftValue,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.weight(1f),
-            )
-            Text(
-                text = rightValue,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.weight(1f),
-            )
+            ValueCell(format(left), leftWins, Modifier.weight(1f))
+            ValueCell(format(right), rightWins, Modifier.weight(1f))
         }
+    }
+}
+
+@Composable
+private fun ValueCell(
+    value: String,
+    isWinner: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val background = if (isWinner) {
+        MaterialTheme.colorScheme.primaryContainer
+    } else {
+        Color.Transparent
+    }
+    val textColor = if (isWinner) {
+        MaterialTheme.colorScheme.onPrimaryContainer
+    } else {
+        MaterialTheme.colorScheme.onSurface
+    }
+
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = if (isWinner) FontWeight.Bold else FontWeight.SemiBold,
+            textAlign = TextAlign.Center,
+            color = textColor,
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .background(background)
+                .padding(horizontal = 12.dp, vertical = 4.dp),
+        )
     }
 }
 
