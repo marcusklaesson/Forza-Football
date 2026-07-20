@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.example.forzafootball.ui.theme.ForzaFootballTheme
 
 @Composable
-fun ErrorScreen(text: String?, onRetryCallback: () -> Unit = {}) {
+fun ErrorScreen(text: String?, onRetry: () -> Unit = {}) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
@@ -32,7 +32,7 @@ fun ErrorScreen(text: String?, onRetryCallback: () -> Unit = {}) {
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.error,
             )
-            Button(onClick = onRetryCallback) {
+            Button(onClick = onRetry) {
                 Text("Retry")
             }
         }

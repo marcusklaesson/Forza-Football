@@ -9,12 +9,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 data class WorldCupUiState(
     val isLoading: Boolean = false,
     val teams: List<WorldCupTeam> = emptyList(),
     val sortOption: SortOption = SortOption.WORLD_RANK,
     val errorMessage: String? = null,
+    val selectedTeam: WorldCupTeam? = null,
     val comparisonTeams: List<WorldCupTeam> = emptyList(),
 )
 
@@ -47,7 +49,7 @@ class WorldCupViewModel(
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessage = throwable.message ?: "Something went wrong",
+                            errorMessage = throwable.toUserMessage(),
                         )
                     }
                 }
@@ -58,6 +60,14 @@ class WorldCupViewModel(
         _uiState.update {
             it.copy(sortOption = option, teams = option.sort(it.teams))
         }
+    }
+
+    fun onTeamSelected(team: WorldCupTeam) {
+        _uiState.update { it.copy(selectedTeam = team) }
+    }
+
+    fun onTeamDetailsDismissed() {
+        _uiState.update { it.copy(selectedTeam = null) }
     }
 
     fun onTeamLongPressed(team: WorldCupTeam) {
@@ -81,5 +91,10 @@ class WorldCupViewModel(
     fun onComparisonDismissed() {
         _uiState.update { it.copy(comparisonTeams = emptyList()) }
     }
+}
+
+private fun Throwable.toUserMessage(): String = when (this) {
+    is IOException -> "No internet connection. Check your network and try again."
+    else -> "Couldn't load the teams. Please try again."
 }
 
